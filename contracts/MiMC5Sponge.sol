@@ -37,8 +37,10 @@ contract MiMC5Sponge {
             uint256 mask5 = mulmod(mask, mask, p);
             mask5 = mulmod(mask5, mask5, p);
             mask5 = mulmod(mask5, mask, p);
-            lastL = lastR;
-            lastR = (lastL + mask5) % p;
+            
+            uint256 temp = lastR;
+            lastR = addmod(lastL, mask5, p);
+            lastL = temp;
         }
         
         return (lastL, lastR);
