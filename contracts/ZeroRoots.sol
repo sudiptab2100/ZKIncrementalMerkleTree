@@ -10,7 +10,7 @@ contract ZeroRoots is MiMC5Sponge {
     function setRoots() public {
         roots[0] = 0;
         for(uint8 i = 1; i < levels; i++) {
-            roots[i] = miMCSponge(roots[i - 1], roots[i]);
+            roots[i] = miMCSponge(roots[i - 1], roots[i - 1]);
         }
     }
     
