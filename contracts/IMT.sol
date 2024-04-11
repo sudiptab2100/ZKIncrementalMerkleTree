@@ -53,6 +53,10 @@ contract IMT is MiMC5Sponge {
         isTreeSet[_level][_index] = true;
     }
     
+    function getTreeRoot() public view returns (uint256) {
+        return getTreeNode(levels - 1, 0);
+    }
+    
     function insertLeaf(uint256 _leaf) public {
         require(currentLeafIndex <= maxLeaves, "Tree is full");
         setTreeNode(0, currentLeafIndex, _leaf);
