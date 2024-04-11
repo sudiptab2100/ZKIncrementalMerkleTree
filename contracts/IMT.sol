@@ -5,7 +5,7 @@ import "./MiMC5Sponge.sol";
 
 contract IMT is MiMC5Sponge {
     uint32 constant public levels = 32;
-    uint32 constant public maxLeaves = 2**levels - 1;
+    uint32 constant public maxLeaves = uint32(2)**levels - 1;
     uint256[levels] public zeroRoots = [
         0,
         6582740095095376936388179666706376640995777958302529689294846430676159692127,
@@ -58,7 +58,7 @@ contract IMT is MiMC5Sponge {
         require(currentLeafIndex <= maxLeaves, "Tree is full");
         setTreeNode(0, currentLeafIndex, _leaf);
         // Update the path till the root
-        uint256 currIdx = currentLeafIndex;
+        uint32 currIdx = currentLeafIndex;
         for(uint32 i = 1; i < levels; i++) {
             uint256 left;
             uint256 right;
