@@ -62,19 +62,20 @@ contract IMT is MiMC5Sponge {
         setTreeNode(0, currentLeafIndex, _leaf);
         // Update the path till the root
         uint32 currIdx = currentLeafIndex;
+        uint256 currHash = _leaf;
         for(uint32 i = 1; i < levels; i++) {
             uint256 left;
             uint256 right;
-            if(currentLeafIndex % 2 == 0) {
-                left = getTreeNode(i - 1, currentLeafIndex);
-                right = getTreeNode(i - 1, currentLeafIndex + 1);
+            if(currIdx % 2 == 0) {
+                left = currHash;
+                right = getTreeNode(i - 1, currIdx + 1);
             } else {
-                left = getTreeNode(i - 1, currentLeafIndex - 1);
-                right = getTreeNode(i - 1, currentLeafIndex);
+                left = getTreeNode(i - 1, currIdx - 1);
+                right = currHash;
             }
-            uint256 parent = miMCSponge(left, right);
-            setTreeNode(i, currIdx / 2, parent);
+            currHash = miMCSponge(left, right);
             currIdx /= 2;
+            setTreeNode(i, currId, currHash);
         }
         currentLeafIndex++;
     }
@@ -83,11 +84,12 @@ contract IMT is MiMC5Sponge {
         require(_leafIdx <= maxLeaves, "Invalid Leaf Index");
         
         uint32 currIdx = _leafIdx;
-        for(uint32 i = 0; i < levels; i++) {
-            pathElements[i] = getTreeNode(i, currIdx);
+        for(uint32 i = 0; i < levels - 1; i++) {
             if(currIdx % 2 == 0) { // neighbor is right
+                pathElements[i] = getTreeNode(i, currIdx + 1);
                 side[i] = 1;
             } else { // neighbor is left
+                pathElements[i] = getTreeNode(i, currIdx - 1);
                 side[i] = 0;
             }
             currIdx /= 2;
