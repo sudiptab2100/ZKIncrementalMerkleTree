@@ -67,7 +67,8 @@ template MiMC5Sponge(nInputs) {
     
     for(var i = 0; i < nInputs; i++) {
         layers[i] = MiMC5Feistel();
-        layers[i].xL <== lastR + inputs[i];
+        layers[i].xL <== lastR[i] + inputs[i];
+        layers[i].xR <== lastC[i];
         
         lastR[i + 1] <== layers[i].resL;
         lastC[i + 1] <== layers[i].resR;
