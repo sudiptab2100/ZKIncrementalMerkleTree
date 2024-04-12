@@ -41,12 +41,12 @@ template MiMC5Feistel() {
     lastL[0] <== xL;
     lastR[0] <== xR;
     for(var i = 0; i < nRounds; i++) {
-        base[i] <== lastL[i] + k + roundConstants[i];
+        base[i] <== lastR[i] + k + roundConstants[i];
         base2[i] <== base[i] * base[i];
         base4[i] <== base2[i] * base2[i];
         
         lastL[i + 1] <== lastR[i];
-        lastR[i + 1] <== lastL[i] + base[i] + base2[i] + base4[i] + k;
+        lastR[i + 1] <== lastL[i] + base4[i] * base[i];
     }
     
     resL <== lastL[nRounds];
