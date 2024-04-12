@@ -95,4 +95,26 @@ contract IMT is MiMC5Sponge {
             currIdx /= 2;
         }
     }
+    
+    function isTreeMember(uint32 _leafIdx, uint256[levels - 1] memory pathElements, uint8[levels - 1] memory side) public view returns (bool) {
+        require(_leafIdx <= maxLeaves, "Invalid Leaf Index");
+        
+        uint256 root = getTreeNode(0, _leafIdx);
+        for(uint32 i = 0; i < levels - 1; i++) {
+            if(side[i] == 1) {
+                root = miMCSponge(root, pathElements[i]);
+            } else {
+                root = miMCSponge(pathElements[i], root);
+            }
+        }
+        
+        return root == getTreeRoot();
+    }
+    
+    function testMembership(uint32 _leafIdx) public view returns (bool) {
+        uint256[levels - 1] memory el;
+        uint8[levels - 1] memory side;
+        (el, side) = getPath(_leafIdx);
+        return isTreeMember(_leafIdx, el, side);
+    }
 }
