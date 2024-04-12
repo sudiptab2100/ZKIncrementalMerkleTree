@@ -79,7 +79,7 @@ contract IMT is MiMC5Sponge {
         currentLeafIndex++;
     }
     
-    function getPath(uint32 _leafIdx) public view returns (uint256[levels - 1] memory pathElements, uint256[levels - 1] memory side) {
+    function getPath(uint32 _leafIdx) public view returns (uint256[levels - 1] memory pathElements, uint8[levels - 1] memory side) {
         require(_leafIdx <= maxLeaves, "Invalid Leaf Index");
         
         uint32 currIdx = _leafIdx;
