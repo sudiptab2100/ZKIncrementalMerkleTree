@@ -75,7 +75,7 @@ contract IMT is MiMC5Sponge {
             }
             currHash = miMCSponge(left, right);
             currIdx /= 2;
-            setTreeNode(i, currId, currHash);
+            setTreeNode(i, currIdx, currHash);
         }
         currentLeafIndex++;
     }
