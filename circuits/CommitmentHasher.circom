@@ -13,3 +13,5 @@ template CommitmentHasher() {
     
     commitmentHash <== hasher.op;
 }
+
+component main = CommitmentHasher();
