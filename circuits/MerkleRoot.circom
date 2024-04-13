@@ -37,5 +37,3 @@ template MerkleRoot(levels) {
     
     root <== hashes[levels];
 }
-
-component main = MerkleRoot(32);
