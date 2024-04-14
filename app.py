@@ -2,6 +2,7 @@ import os
 import random
 import argparse
 import json
+from web3 import Web3
 
 
 def generate_commitment():
@@ -21,6 +22,19 @@ def generate_commitment():
         commitment = json.load(f)[1]
     
     return commitment
+
+def getContract():
+    address = "0xf559617fdEF8889968b722375f1E2797467280C7"
+    abi = json.load(open('contracts/ABIs/IMT.json'))
+    rpc_url = "https://rpc.sepolia.org"
+    chain_id = 11155111
+    web3 = Web3(Web3.HTTPProvider(rpc_url))
+    contract = w3.eth.contract(address=contract_address, abi=contract_abi)
+    
+    return contract
+
+def insert_commitment(commitment):
+    pass
 
 if __name__ == '__main__':
     if not os.path.exists('files'): os.makedirs('files') 
