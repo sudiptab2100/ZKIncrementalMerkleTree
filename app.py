@@ -26,15 +26,43 @@ def generate_commitment():
 def getContract():
     address = "0xf559617fdEF8889968b722375f1E2797467280C7"
     abi = json.load(open('contracts/ABIs/IMT.json'))
-    rpc_url = "https://rpc.sepolia.org"
+    rpc_url = "https://rpc2.sepolia.org"
     chain_id = 11155111
-    web3 = Web3(Web3.HTTPProvider(rpc_url))
-    contract = w3.eth.contract(address=contract_address, abi=contract_abi)
+    private_key = input("Enter Ethereum Private Key: ") # os.getenv("ETH_PRIVATE_KEY")
     
-    return contract
+    w3 = Web3(Web3.HTTPProvider(rpc_url))
+    sender_address = w3.eth.account.from_key(private_key).address
+    contract = w3.eth.contract(address=address, abi=abi)
+    
+    metadata = {
+        'chainid': chain_id,
+        'private': private_key,
+        'sender': sender_address,
+        'w3': w3,
+        'contract': contract
+    }
+    return metadata
 
 def insert_commitment(commitment):
-    pass
+    metadata = getContract()
+    chain_id = metadata['chainid']
+    private_key = metadata['private']
+    sender_address = metadata['sender']
+    w3 = metadata['w3']
+    contract = metadata['contract']
+    
+    leaf_index = contract.functions.currentLeafIndex().call()
+    insret_commitment_tx = contract.functions.insertLeaf(int(commitment)).build_transaction(
+        {
+            "nonce": w3.eth.get_transaction_count(sender_address),
+            "gasPrice": w3.eth.gas_price,
+            "gas": 3000000,  # Adjust gas limit accordingly
+            "chainId": chain_id,
+        }
+    )
+    signed_tx = w3.eth.account.sign_transaction(insret_commitment_tx, private_key)
+    tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction).hex()
+    return leaf_index, tx_hash
 
 if __name__ == '__main__':
     if not os.path.exists('files'): os.makedirs('files') 
@@ -49,3 +77,6 @@ if __name__ == '__main__':
     if args.task == 'insert':
         commitment = generate_commitment()
         print(f"Generated commitment: {commitment}")
+        leaf_index, tx_hash = insert_commitment(commitment)
+        print(f"Leaf Index: {leaf_index}")
+        print(f"Transaction hash: {tx_hash}")
