@@ -7,10 +7,10 @@ from web3 import Web3
 
 def generateCommitment():
     nullifier = int.from_bytes(random.randbytes(32), 'big')
-    commitment = int.from_bytes(random.randbytes(32), 'big')
+    secret = int.from_bytes(random.randbytes(32), 'big')
     data = {
         "nullifier": nullifier,
-        "secret": commitment
+        "secret": secret
     }
     with open('files/secrets.json', 'w') as f:
         json.dump(data, f, indent=4)
@@ -19,9 +19,14 @@ def generateCommitment():
     os.system('snarkjs wtns export json files/witness.wtns files/witness.json') # Export witness to json
     
     with open('files/witness.json') as f:
-        commitment = json.load(f)[1]
+        commitment = json.load(f)[1] # Second element in witness.json is the commitment
     
-    return commitment
+    data = {
+        "nullifier": nullifier,
+        "secret": secret,
+        "commitment": commitment
+    }
+    return data
 
 def getContract():
     address = "0xf559617fdEF8889968b722375f1E2797467280C7"
@@ -97,11 +102,14 @@ if __name__ == '__main__':
         raise ValueError(f"Invalid task argument. Expected one of: {validate}")
     
     if args.task == 'insert':
-        commitment = generateCommitment()
-        print(f"Generated commitment: {commitment}")
-        leaf_index, tx_hash = insertCommitment(commitment)
+        commitmentData = generateCommitment()
+        print(f"Generated commitment: {commitmentData['commitment']}")
+        leaf_index, tx_hash = insertCommitment(commitmentData['commitment'])
         print(f"Leaf Index: {leaf_index}")
         print(f"Transaction hash: {tx_hash}")
+        if not os.path.exists(f'files/leaf{leaf_index}/'):
+            os.makedirs(f'files/leaf{leaf_index}/')
+            os.rename('files/secrets.json', f'files/leaf{leaf_index}/secrets.json')
     
     elif args.task == 'verify':
         leaf_index = int(input("Enter leaf index: "))

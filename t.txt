@@ -1,0 +1,9 @@
+node CommitmentHasher_js/generate_witness.js CommitmentHasher_js/CommitmentHasher.wasm input1.json witness.wtns
+
+snarkjs wtns export json witness.wtns witness.json 
+
+node MerkleRoot_js/generate_witness.js MerkleRoot_js/MerkleRoot.wasm input.json witness.wtns
+
+node ZKVerifier_js/generate_witness.js ZKVerifier_js/ZKVerifier.wasm input.json witness.wtns
+
+export ETH_PRIVATE_KEY=62dad4122d2f8860ef02910bf6a32874f9c3b8d6891179be45aec4a9b5f79e27
