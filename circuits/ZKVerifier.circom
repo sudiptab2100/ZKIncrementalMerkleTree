@@ -23,4 +23,4 @@ template ZKVerifier(levels) {
     valid <== 1;
 }
 
-component main {public [root, nullifier]} = ZKVerifier(32);
+component main {public [root, nullifier]} = ZKVerifier(31);
