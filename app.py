@@ -5,7 +5,7 @@ import json
 from web3 import Web3
 
 
-def generate_commitment():
+def generateCommitment():
     nullifier = int.from_bytes(random.randbytes(32), 'big')
     commitment = int.from_bytes(random.randbytes(32), 'big')
     data = {
@@ -28,7 +28,7 @@ def getContract():
     abi = json.load(open('contracts/ABIs/IMT.json'))
     rpc_url = "https://rpc2.sepolia.org"
     chain_id = 11155111
-    private_key = input("Enter Ethereum Private Key: ") # os.getenv("ETH_PRIVATE_KEY")
+    private_key = os.getenv("ETH_PRIVATE_KEY")
     
     w3 = Web3(Web3.HTTPProvider(rpc_url))
     sender_address = w3.eth.account.from_key(private_key).address
@@ -43,7 +43,7 @@ def getContract():
     }
     return metadata
 
-def insert_commitment(commitment):
+def insertCommitment(commitment):
     metadata = getContract()
     chain_id = metadata['chainid']
     private_key = metadata['private']
@@ -64,6 +64,28 @@ def insert_commitment(commitment):
     tx_hash = w3.eth.send_raw_transaction(signed_tx.rawTransaction).hex()
     return leaf_index, tx_hash
 
+def getPath(leaf_index):
+    metadata = getContract()
+    chain_id = metadata['chainid']
+    private_key = metadata['private']
+    sender_address = metadata['sender']
+    w3 = metadata['w3']
+    contract = metadata['contract']
+    
+    path = contract.functions.getPath(leaf_index).call()
+    return path
+
+def isTreeMember(leaf_index, pathElements, side):
+    metadata = getContract()
+    chain_id = metadata['chainid']
+    private_key = metadata['private']
+    sender_address = metadata['sender']
+    w3 = metadata['w3']
+    contract = metadata['contract']
+    
+    is_member = contract.functions.isTreeMember(leaf_index, pathElements, side).call()
+    return is_member
+
 if __name__ == '__main__':
     if not os.path.exists('files'): os.makedirs('files') 
     
@@ -75,8 +97,14 @@ if __name__ == '__main__':
         raise ValueError(f"Invalid task argument. Expected one of: {validate}")
     
     if args.task == 'insert':
-        commitment = generate_commitment()
+        commitment = generateCommitment()
         print(f"Generated commitment: {commitment}")
-        leaf_index, tx_hash = insert_commitment(commitment)
+        leaf_index, tx_hash = insertCommitment(commitment)
         print(f"Leaf Index: {leaf_index}")
         print(f"Transaction hash: {tx_hash}")
+    
+    elif args.task == 'verify':
+        leaf_index = int(input("Enter leaf index: "))
+        pathElements, side = getPath(leaf_index)
+        isMember = isTreeMember(leaf_index, pathElements, side)
+        print(f"Is tree member: {isMember}")
