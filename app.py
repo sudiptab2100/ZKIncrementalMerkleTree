@@ -11,10 +11,10 @@ def generate_commitment():
         "nullifier": nullifier,
         "secret": commitment
     }
-    with open('files/input.json', 'w') as f:
+    with open('files/secrets.json', 'w') as f:
         json.dump(data, f, indent=4)
     
-    os.system('node CommitmentHasher_js/generate_witness.js CommitmentHasher_js/CommitmentHasher.wasm files/input.json files/witness.wtns') # Generate witness
+    os.system('node CommitmentHasher_js/generate_witness.js CommitmentHasher_js/CommitmentHasher.wasm files/secrets.json files/witness.wtns') # Generate witness
     os.system('snarkjs wtns export json files/witness.wtns files/witness.json') # Export witness to json
     
     with open('files/witness.json') as f:
