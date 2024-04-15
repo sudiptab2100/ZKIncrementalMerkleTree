@@ -19,14 +19,14 @@ Incremental Merkle Tree (**IMT**) is a specialized form of a Merkle tree designe
 - Generate a random `nullifier` and `secret`.
 - Calculate the hash of them (`commitment`).
 
-<center> <img src="./files/docs/Commitment.png" /> </center>
+<p align="center"> <img src="./files/docs/Commitment.png" /> </p>
 
 #### Insert Commitment to the Tree
 
 - Insert the `commitment` to the tree as leaf (onchain).
 - After every the path from leaf to root is updated.
 
-<center> <img src="./files/docs/tree.png" /> </center>
+<p align="center"> <img src="./files/docs/tree.png" /> </p>
 
 ## Requirements
 
