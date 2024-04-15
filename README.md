@@ -10,6 +10,12 @@ Incremental Merkle Tree (**IMT**) is a specialized form of a Merkle tree designe
 
 **zk-IMT** is a zero-knowledge proof system for Incremental Merkle Trees. It allows a prover to prove tree membership and non-membership of a leaf in an IMT without revealing the leaf itself. The prover can also prove the consistency of two IMTs without revealing the entire tree.
 
+### What is MiMC5 Sponge?
+
+MiMC5 is a family of hash functions that are based on the MiMC construction. It is a sponge-based hash function that is used to hash the inputs in zk-IMT.
+
+MiMC is more suitable than SHA256 or Keccak for zk-SNARKs because it has low multiplicative complexity and is more efficient to implement in zk-SNARKs.
+
 ## Working
 
 ### Generate Commitment Hash
