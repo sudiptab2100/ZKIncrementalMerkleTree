@@ -28,7 +28,7 @@ Incremental Merkle Tree (**IMT**) is a specialized form of a Merkle tree designe
 
 ### Prove that Commitment ($c_i$) is in the Tree
 
-- For a commitment ($c_i$) at index `i`, the path $p_2 = [p_{2,0}, p_{2,1}, p_{2,2}]$
+- For a commitment ($c_2$) at index, $i=2$, the path $p_2 = [p_{2,0}, p_{2,1}, p_{2,2}]$
     - Generate $h_2 = H(H(p_{2,1},H(c_2, p_{2,0})),p_{2,2})$
     - Check if $h_2 = root$. If equal then $c_i$ is in the tree.
 
