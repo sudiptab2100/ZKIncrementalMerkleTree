@@ -28,11 +28,28 @@ Incremental Merkle Tree (**IMT**) is a specialized form of a Merkle tree designe
 
 ### Prove that Commitment ($c_i$) is in the Tree
 
-- For a commitment ($c_2$) at index, $i=2$, the path $p_2 = [p_{2,0}, p_{2,1}, p_{2,2}]$
-    - Generate $h_2 = H(H(p_{2,1},H(c_2, p_{2,0})),p_{2,2})$
-    - Check if $h_2 = root$. If equal then $c_i$ is in the tree.
+For a commitment ($c_2$) at index, $i=2$, the path $p_2 = [p_{2,0}, p_{2,1}, p_{2,2}]$
+
+- Generate $h_2 = H(H(p_{2,1},H(c_2, p_{2,0})),p_{2,2})$
+- Check if $h_2 = root$. If equal then $c_i$ is in the tree.
 
 <p align="center"> <img src="./files/docs/verify.png" /> </p>
+
+### Prove Membership using zk-SNARK
+
+Now to prove that $c_2$ is in the tree without revealing $c_2$ itself, we will use zk-SNARK.
+
+- Nullifier ($n_2$) and Secret ($s_2$) will be used to generate Groth16 proof.
+- Nullifier ($n_2$) is used to prevent reusing the same commitment in the future.
+- Secret ($s_2$) is kept secret for anonymity.
+
+Generate a proof such that that $h_2 = root$ where
+
+- leaf $\rightarrow n_2$
+- path $\rightarrow [s_2, p_{2,0}, p_{2,1}, p_{2,2}]$
+- $h_2 = H(H(p_{2,1},H(H(n_2, s_2), p_{2,0})),p_{2,2})$
+
+<p align="center"> <img src="./files/docs/zkverify.png" /> </p>
 
 ## Requirements
 
@@ -75,7 +92,7 @@ It will generate random `nullifier` and `secret` and insert the hash of the both
 python app.py --task insert
 ```
 
-### Prove Membership using zk-SNARK
+### Prove Membership using zk-SNARK (local & onchain)
 
 It will fetch the path of a leaf given it's index and generate a proof for the leaf's membership in the tree. The proof will be verified onchain for tree membership without revealing for which leaf the proof was generated.
 
