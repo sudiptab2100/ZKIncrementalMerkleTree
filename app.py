@@ -98,6 +98,17 @@ def getTreeRoot():
     root = contract.functions.getTreeRoot().call()
     return root
 
+def verifyProofZK(proof, public):
+    metadata = getContract()
+    chain_id = metadata['chainid']
+    private_key = metadata['private']
+    sender_address = metadata['sender']
+    w3 = metadata['w3']
+    contract = metadata['contract']
+    
+    isValid = contract.functions.verifyProof(proof[0], proof[1], proof[2], public).call()
+    return isValid
+
 if __name__ == '__main__':
     if not os.path.exists('files'): os.makedirs('files') 
     
@@ -144,3 +155,20 @@ if __name__ == '__main__':
         os.system('node ZKVerifier_js/generate_witness.js ZKVerifier_js/ZKVerifier.wasm files/input.json files/witness.wtns') # Generate witness
         os.system('snarkjs groth16 prove ZKStore/proving_key.zkey files/witness.wtns files/proof.json files/public.json') # Generate proof
         os.system('snarkjs groth16 verify ZKStore/verification_key.json files/public.json files/proof.json') # Verify proof locally
+        
+        with open('files/proof.json') as f1, open('files/public.json') as f2:
+            _proof = json.load(f1)
+            _public = json.load(f2)
+        
+        proof = [
+            [int(_proof['pi_a'][0]), int(_proof['pi_a'][1])],
+            [
+                [int(_proof['pi_b'][0][1]), int(_proof['pi_b'][0][0])],
+                [int(_proof['pi_b'][1][1]), int(_proof['pi_b'][1][0])]
+            ],
+            [int(_proof['pi_c'][0]), int(_proof['pi_c'][1])]
+        ]
+        public = [int(x) for x in _public]
+        
+        isValidProof = verifyProofZK(proof, public)
+        print(f"The Proof is Valid: {isValidProof}")
