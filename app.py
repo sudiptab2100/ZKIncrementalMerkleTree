@@ -6,8 +6,9 @@ from web3 import Web3
 
 
 def generateCommitment():
-    nullifier = int.from_bytes(random.randbytes(32), 'big')
-    secret = int.from_bytes(random.randbytes(32), 'big')
+    p = 21888242871839275222246405745257275088548364400416034343698204186575808495617; # Prime field
+    nullifier = int.from_bytes(random.randbytes(32), 'big') % p
+    secret = int.from_bytes(random.randbytes(32), 'big') % p
     data = {
         "nullifier": str(nullifier),
         "secret": str(secret)
