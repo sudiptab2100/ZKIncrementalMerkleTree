@@ -40,8 +40,8 @@ For a commitment ($c_2$) at index, $i=2$, the path $p_2 = [p_{2,0}, p_{2,1}, p_{
 Now to prove that $c_2$ is in the tree without revealing $c_2$ itself, we will use zk-SNARK.
 
 - Nullifier ($n_2$) and Secret ($s_2$) will be used to generate Groth16 proof.
-- Nullifier ($n_2$) is used to prevent reusing the same commitment in the future.
-- Secret ($s_2$) is kept secret for anonymity.
+- Nullifier ($n_2$) is used as **public parameter** to prevent reusing the same commitment in the future.
+- Secret ($s_2$) is kept secret (**private input**) for anonymity.
 
 Generate a proof such that that $h_2 = root$ where
 
