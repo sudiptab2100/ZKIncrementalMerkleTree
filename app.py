@@ -141,3 +141,6 @@ if __name__ == '__main__':
         }
         with open('files/input.json', 'w') as f:
             json.dump(data, f, indent=4)
+        os.system('node ZKVerifier_js/generate_witness.js ZKVerifier_js/ZKVerifier.wasm files/input.json files/witness.wtns') # Generate witness
+        os.system('snarkjs groth16 prove ZKStore/proving_key.zkey files/witness.wtns files/proof.json files/public.json') # Generate proof
+        os.system('snarkjs groth16 verify ZKStore/verification_key.json files/public.json files/proof.json') # Verify proof locally
