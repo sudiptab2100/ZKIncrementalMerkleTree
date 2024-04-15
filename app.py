@@ -6,8 +6,8 @@ from web3 import Web3
 
 
 def generateCommitment():
-    nullifier = int.from_bytes(random.randbytes(32), 'big')
-    secret = int.from_bytes(random.randbytes(32), 'big')
+    nullifier = int.from_bytes(random.randbytes(31), 'big')
+    secret = int.from_bytes(random.randbytes(31), 'big')
     data = {
         "nullifier": nullifier,
         "secret": secret
@@ -91,13 +91,19 @@ def isTreeMember(leaf_index, pathElements, side):
     is_member = contract.functions.isTreeMember(leaf_index, pathElements, side).call()
     return is_member
 
+def getTreeRoot():
+    metadata = getContract()
+    contract = metadata['contract']
+    root = contract.functions.getTreeRoot().call()
+    return root
+
 if __name__ == '__main__':
     if not os.path.exists('files'): os.makedirs('files') 
     
     parser = argparse.ArgumentParser(description="ZK Incremental Merkle Tree (IMT) Operations.")
-    parser.add_argument('--task', type=str, required=True, help='"insert": Generate and Insert Commitment in IMT\n"verify": Verify Commitment in IMT')
+    parser.add_argument('--task', type=str, required=True, help='"insert": Generate and Insert Commitment in IMT, "verify": Verify Commitment in IMT, "zk-verify": Verify Commitment in IMT using zk-SNARK.')
     args = parser.parse_args()
-    validate = ['insert', 'verify']
+    validate = ['insert', 'verify', 'zk-verify']
     if args.task not in validate:
         raise ValueError(f"Invalid task argument. Expected one of: {validate}")
     
@@ -116,3 +122,21 @@ if __name__ == '__main__':
         pathElements, side = getPath(leaf_index)
         isMember = isTreeMember(leaf_index, pathElements, side)
         print(f"Is tree member: {isMember}")
+    
+    elif args.task == 'zk-verify':
+        leaf_index = int(input("Enter leaf index: "))
+        with open(f'files/leaf{leaf_index}/secrets.json') as f:
+            data = json.load(f)
+        nullifier = data["nullifier"]
+        secret = data["secret"]
+        pathElements, side = getPath(leaf_index)
+        
+        data = {
+            "root": str(getTreeRoot()),
+            "nullifier": str(nullifier),
+            "secret": str(secret),
+            "pathElements": [str(i) for i in pathElements],
+            "side": side
+        }
+        with open('files/input.json', 'w') as f:
+            json.dump(data, f, indent=4)
