@@ -30,8 +30,8 @@ def generateCommitment():
     return data
 
 def getContract():
-    address = "0xf559617fdEF8889968b722375f1E2797467280C7"
-    abi = json.load(open('contracts/ABIs/IMT.json'))
+    address = "0xAfdf815F584d61E0eeB9f56f0b30721121d9035f"
+    abi = json.load(open('contracts/ABIs/zkIMT.json'))
     rpc_url = "https://rpc2.sepolia.org"
     chain_id = 11155111
     private_key = os.getenv("ETH_PRIVATE_KEY")
