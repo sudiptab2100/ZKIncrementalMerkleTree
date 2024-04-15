@@ -6,11 +6,11 @@ from web3 import Web3
 
 
 def generateCommitment():
-    nullifier = int.from_bytes(random.randbytes(31), 'big')
-    secret = int.from_bytes(random.randbytes(31), 'big')
+    nullifier = int.from_bytes(random.randbytes(32), 'big')
+    secret = int.from_bytes(random.randbytes(32), 'big')
     data = {
-        "nullifier": nullifier,
-        "secret": secret
+        "nullifier": str(nullifier),
+        "secret": str(secret)
     }
     with open('files/secrets.json', 'w') as f:
         json.dump(data, f, indent=4)
@@ -136,7 +136,7 @@ if __name__ == '__main__':
             "nullifier": str(nullifier),
             "secret": str(secret),
             "pathElements": [str(i) for i in pathElements],
-            "side": side
+            "side": [str(i) for i in side]
         }
         with open('files/input.json', 'w') as f:
             json.dump(data, f, indent=4)
