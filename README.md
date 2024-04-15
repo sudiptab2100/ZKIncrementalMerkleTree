@@ -10,6 +10,24 @@ Incremental Merkle Tree (**IMT**) is a specialized form of a Merkle tree designe
 
 **zk-IMT** is a zero-knowledge proof system for Incremental Merkle Trees. It allows a prover to prove tree membership and non-membership of a leaf in an IMT without revealing the leaf itself. The prover can also prove the consistency of two IMTs without revealing the entire tree.
 
+## Working
+
+### Insertion
+
+#### Generate Commitment Hash
+
+- Generate a random `nullifier` and `secret`.
+- Calculate the hash of them (`commitment`).
+
+    ![Commitment](./files/docs/Commitment.png)
+
+#### Insert Commitment to the Tree
+
+- Insert the `commitment` to the tree as leaf (onchain).
+- After every the path from leaf to root is updated.
+
+    ![Insertion](./files/docs/tree.png)
+
 ## Requirements
 
 This project was developed and tested with the following software versions:
