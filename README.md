@@ -21,7 +21,7 @@ MiMC is more suitable than SHA256 or Keccak for zk-SNARKs because it has low mul
 ### Generate Commitment Hash
 
 - Generate a random `nullifier` ($n_i$) and `secret` ($s_i$).
-- Calculate the hash of them (`commitment`, $c_i = hash(n_i, s_i)$).
+- Calculate the hash of them (`commitment`, $c_i = hash(n_i, s_i)$ ).
 
 <p align="center"> <img src="./files/docs/Commitment.png" /> </p>
 
