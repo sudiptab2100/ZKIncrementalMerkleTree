@@ -71,7 +71,7 @@ This project was developed and tested with the following software versions:
 
 ```bash
 python3 -m venv env
-source venv/bin/activate
+source env/bin/activate
 ```
 
 ### Install dependencies
